@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb32e4884454815458cba5701d46ec45, type: 3}
-  m_Name: CanonSettings
+  m_Name: CannonSettings
   m_EditorClassIdentifier: 
   <MinAngle>k__BackingField: 0
   <MaxAngle>k__BackingField: 180

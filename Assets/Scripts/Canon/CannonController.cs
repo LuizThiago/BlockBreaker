@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CanonController : MonoBehaviour
+public class CannonController : MonoBehaviour
 {
     [SerializeField] private Transform _canonTransform;
     [SerializeField] private Transform _shootSpawnPoint;
     [SerializeField] private InputActionReference _aimInputAction;
     [SerializeField] private InputActionReference _shootInputAction;
-    [SerializeField] private CanonSettings _canonSettings;
+    [SerializeField] private CannonSettings _canonSettings;
 
     private Vector2 _mousePosition;
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2425245596009750994}
   - component: {fileID: 3891003735609174297}
   m_Layer: 0
-  m_Name: Canon Controller
+  m_Name: Cannon Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileSettings: {fileID: 11400000, guid: a0033e832999a10438ef175d9e6767b8, type: 2}
+  _projectilesContainer: {fileID: 0}
 --- !u!1 &8188613632951605716
 GameObject:
   m_ObjectHideFlags: 0
