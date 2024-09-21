@@ -4,7 +4,9 @@ using UnityEngine.InputSystem;
 public class CanonController : MonoBehaviour
 {
     [SerializeField] private Transform _canonTransform;
+    [SerializeField] private Transform _shootSpawnPoint;
     [SerializeField] private InputActionReference _aimInputAction;
+    [SerializeField] private InputActionReference _shootInputAction;
     [SerializeField] private CanonSettings _canonSettings;
 
     private Vector2 _mousePosition;
@@ -13,11 +15,7 @@ public class CanonController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_aimInputAction != null && _aimInputAction.action != null)
-        {
-            _aimInputAction.action.performed += OnAimInputPerformed;
-            _aimInputAction.action.Enable();
-        }
+        EnableInputs();
     }
 
     private void Update()
@@ -27,11 +25,7 @@ public class CanonController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (_aimInputAction != null && _aimInputAction.action != null)
-        {
-            _aimInputAction.action.performed -= OnAimInputPerformed;
-            _aimInputAction.action.Disable();
-        }
+        DisableInputs();
     }
 
     #endregion
@@ -56,6 +50,41 @@ public class CanonController : MonoBehaviour
 
         //Apply the rotation to the canon
         _canonTransform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+    }
+
+    private void OnShootInputPerformed(InputAction.CallbackContext context)
+    {
+        GameManager.ProjectileController.SpawnProjectile(_canonTransform.up, _shootSpawnPoint.position);
+    }
+
+    private void EnableInputs()
+    {
+        if (_aimInputAction != null && _aimInputAction.action != null)
+        {
+            _aimInputAction.action.performed += OnAimInputPerformed;
+            _aimInputAction.action.Enable();
+        }
+
+        if (_shootInputAction != null && _shootInputAction.action != null)
+        {
+            _shootInputAction.action.performed += OnShootInputPerformed;
+            _shootInputAction.action.Enable();
+        }
+    }
+
+    private void DisableInputs()
+    {
+        if (_aimInputAction != null && _aimInputAction.action != null)
+        {
+            _aimInputAction.action.performed -= OnAimInputPerformed;
+            _aimInputAction.action.Disable();
+        }
+
+        if (_shootInputAction != null && _shootInputAction.action != null)
+        {
+            _shootInputAction.action.performed -= OnShootInputPerformed;
+            _shootInputAction.action.Disable();
+        }
     }
 
     #endregion
