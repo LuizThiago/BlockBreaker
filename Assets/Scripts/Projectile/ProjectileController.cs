@@ -7,6 +7,7 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private Transform _projectilesContainer;
     [Header("Events")]
     [SerializeField] private GameEvent _gameEndEvent;
+    [SerializeField] private GameEvent _shotEvent;
 
     private readonly List<Projectile> _projectiles = new();
     private readonly List<Projectile> _toDestroy = new();
@@ -72,6 +73,8 @@ public class ProjectileController : MonoBehaviour
         projectile.Init(direction, ProjectileSpeed, ProjectileLifeTime);
 
         _projectiles.Add(projectile);
+
+        _shotEvent.Raise(this, projectile);
     }
 
     #endregion
