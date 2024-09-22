@@ -51,6 +51,60 @@ MonoBehaviour:
   _canonSettings: {fileID: 11400000, guid: efda00192b533684b80d79316ab7e516, type: 2}
   _gameStartEvent: {fileID: 11400000, guid: 98870e00255aeef40a580a66136b7c19, type: 2}
   _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
+--- !u!1 &1853083725074460585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7259681275665771101}
+  - component: {fileID: 20070498199640581}
+  m_Layer: 0
+  m_Name: UI Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7259681275665771101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853083725074460585}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1996564076767540774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &20070498199640581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853083725074460585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4dd3af0e3da644eb5538e057f673e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _panels:
+  - <Type>k__BackingField: 0
+    <Panel>k__BackingField: {fileID: 0}
+    _label: {fileID: 0}
+  - <Type>k__BackingField: 1
+    <Panel>k__BackingField: {fileID: 0}
+    _label: {fileID: 0}
+  _playerStartedEvent: {fileID: 11400000, guid: 9b23d1e9075a962478888d16c05e5b62, type: 2}
+  _gameStartEvent: {fileID: 11400000, guid: 98870e00255aeef40a580a66136b7c19, type: 2}
+  _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
 --- !u!1 &6366957470960886718
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _projectileSettings: {fileID: 11400000, guid: a0033e832999a10438ef175d9e6767b8, type: 2}
   _projectilesContainer: {fileID: 0}
-  _allDestructibleDestroyedEvent: {fileID: 11400000, guid: 25c0f543b59cfef40ab8539f36b88e76, type: 2}
+  _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
 --- !u!1 &8188613632951605716
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +185,7 @@ Transform:
   - {fileID: 2425245596009750994}
   - {fileID: 6766794496009349688}
   - {fileID: 5456304997448319528}
+  - {fileID: 7259681275665771101}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8692314576523785780
@@ -145,11 +200,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1fee399b1f6f264b9ff2123914bdc3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _startTimeDelay: 3
   _canonController: {fileID: 3891003735609174297}
   _projectileController: {fileID: 9023089614968095096}
+  _stagesController: {fileID: 7062814494319727930}
+  _startGameInputAction: {fileID: 1823403889458162795, guid: a0cdd8cf0ed3d4a428cf9a2b8f54d098, type: 3}
+  _playerStartedEvent: {fileID: 11400000, guid: 9b23d1e9075a962478888d16c05e5b62, type: 2}
   _gameStartEvent: {fileID: 11400000, guid: 98870e00255aeef40a580a66136b7c19, type: 2}
   _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
-  _allDestructibleDestroyedEvent: {fileID: 11400000, guid: 25c0f543b59cfef40ab8539f36b88e76, type: 2}
 --- !u!1 &9107232084787584881
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,4 +260,4 @@ MonoBehaviour:
   _destructiblePrefab: {fileID: 7364962793700548473, guid: 647518fc08c106b4cae1dc6f4e63972d, type: 3}
   _destructiblesContainer: {fileID: 0}
   _destructibleDestroyedEvent: {fileID: 11400000, guid: 82ad9c647591370409ace261981420f1, type: 2}
-  _allDestructibleDestroyedEvent: {fileID: 11400000, guid: 25c0f543b59cfef40ab8539f36b88e76, type: 2}
+  _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}

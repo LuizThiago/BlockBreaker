@@ -28,5 +28,10 @@ public class StageList
         return true;
     }
 
+    public void ResetList()
+    {
+        CurrentStageIndex = 0;
+    }
+
     #endregion
 }

@@ -1,15 +1,21 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [SerializeField] private float _startTimeDelay = 3f;
+    [Header("References")]
     [SerializeField] private CannonController _canonController;
     [SerializeField] private ProjectileController _projectileController;
+    [SerializeField] private StagesController _stagesController;
+    [SerializeField] private InputActionReference _startGameInputAction;
     [Header("Events")]
+    [SerializeField] private GameEvent _playerStartedEvent;
     [SerializeField] private GameEvent _gameStartEvent;
     [SerializeField] private GameEvent _gameEndEvent;
-    [SerializeField] private GameEvent _allDestructibleDestroyedEvent;
 
     #region Properties
 
@@ -30,20 +36,19 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        Instance._allDestructibleDestroyedEvent.RegisterResponse(OnAllDestructibleDestroyed);
+        Instance._gameEndEvent.RegisterResponse(OnGameEnd);
     }
 
     private void Start()
     {
-        IsRunning = true;
-        _gameStartEvent.Raise(this, null);
+        EnableInputs();
     }
 
     private void OnDestroy()
     {
         if (Instance != null)
         {
-            Instance._allDestructibleDestroyedEvent.UnRegisterResponse(OnAllDestructibleDestroyed);
+            Instance._gameEndEvent.UnRegisterResponse(OnGameEnd);
         }
     }
 
@@ -51,10 +56,57 @@ public class GameManager : MonoBehaviour
 
     #region Private
 
-    private static void OnAllDestructibleDestroyed(Component sender, object _)
+    private void EnableInputs()
+    {
+        if (_startGameInputAction != null && _startGameInputAction.action != null)
+        {
+            _startGameInputAction.action.performed += OnStartGameInputPerformed;
+            _startGameInputAction.action.Enable();
+        }
+    }
+
+    private void DisableInputs()
+    {
+        if (_startGameInputAction != null && _startGameInputAction.action != null)
+        {
+            _startGameInputAction.action.performed -= OnStartGameInputPerformed;
+            _startGameInputAction.action.Disable();
+        }
+    }
+
+    private void OnStartGameInputPerformed(InputAction.CallbackContext context)
+    {
+        StartGame();
+    }
+
+    private void StartGame()
+    {
+        _playerStartedEvent.Raise(this, _stagesController.CurrentStageName);
+        StartCoroutine(PrepareStage());
+    }
+
+    private static void OnGameEnd(Component sender, object arg)
     {
         IsRunning = false;
-        Instance._gameEndEvent.Raise(Instance, null);
+
+        if (arg is null)
+        {
+            Instance.EnableInputs();
+            return;
+        }
+
+        Instance.StartGame();
+    }
+
+    private IEnumerator PrepareStage()
+    {
+        DisableInputs();
+
+        yield return new WaitForSeconds(_startTimeDelay);
+
+        _stagesController.BuildStage();
+        IsRunning = true;
+        _gameStartEvent.Raise(this, null);
     }
 
     #endregion

@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 719473bcc70a4334380167e9a5bb06c3, type: 3}
-  m_Name: AllDestructablesDestroyedEvent
+  m_Name: PlayerStartedEvent
   m_EditorClassIdentifier: 

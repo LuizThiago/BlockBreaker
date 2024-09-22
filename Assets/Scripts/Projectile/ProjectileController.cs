@@ -6,7 +6,7 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private ProjectileSettings _projectileSettings;
     [SerializeField] private Transform _projectilesContainer;
     [Header("Events")]
-    [SerializeField] private GameEvent _allDestructibleDestroyedEvent;
+    [SerializeField] private GameEvent _gameEndEvent;
 
     private readonly List<Projectile> _projectiles = new();
     private readonly List<Projectile> _toDestroy = new();
@@ -23,7 +23,7 @@ public class ProjectileController : MonoBehaviour
 
     private void OnEnable()
     {
-        _allDestructibleDestroyedEvent.RegisterResponse(OnAllDestructibleDestroyed);
+        _gameEndEvent.RegisterResponse(OnGameEndEvent);
     }
 
     private void Update()
@@ -57,7 +57,7 @@ public class ProjectileController : MonoBehaviour
 
     private void OnDisable()
     {
-        _allDestructibleDestroyedEvent.UnRegisterResponse(OnAllDestructibleDestroyed);
+        _gameEndEvent.UnRegisterResponse(OnGameEndEvent);
     }
 
     #endregion
@@ -78,7 +78,7 @@ public class ProjectileController : MonoBehaviour
 
     #region Private
 
-    private void OnAllDestructibleDestroyed(Component sender, object _)
+    private void OnGameEndEvent(Component sender, object _)
     {
         DestroyAllProjectiles();
     }

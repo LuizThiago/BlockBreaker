@@ -8,20 +8,20 @@ public class StagesController : MonoBehaviour
     [SerializeField] private Transform _destructiblesContainer;
     [Header("Events")]
     [SerializeField] private GameEvent _destructibleDestroyedEvent;
-    [SerializeField] private GameEvent _allDestructibleDestroyedEvent;
+    [SerializeField] private GameEvent _gameEndEvent;
 
     private readonly List<Destructible> _destructibles = new();
+
+    #region Properties
+    public string CurrentStageName => _stages.CurrentStageName;
+
+    #endregion
 
     #region Monobehavour
 
     private void OnEnable()
     {
         _destructibleDestroyedEvent.RegisterResponse(OnDestructibleDestroyed);
-    }
-
-    private void Start()
-    {
-        BuildStage();
     }
 
     private void OnDisable()
@@ -31,9 +31,9 @@ public class StagesController : MonoBehaviour
 
     #endregion
 
-    #region Private 
+    #region Public
 
-    private void BuildStage()
+    public void BuildStage()
     {
         ClearStage();
 
@@ -54,6 +54,10 @@ public class StagesController : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
+    #region Private 
 
     private Vector2 GetStartPosition(StageDefinition stage)
     {
@@ -105,7 +109,14 @@ public class StagesController : MonoBehaviour
     {
         if (_destructibles.Count == 0)
         {
-            _allDestructibleDestroyedEvent.Raise(this, null);
+            if (_stages.TryGetNextStage(out var _))
+            {
+                _gameEndEvent.Raise(this, _stages.CurrentStageName);
+                return;
+            }
+
+            _stages.ResetList();
+            _gameEndEvent.Raise(this, null);
         }
     }
 
