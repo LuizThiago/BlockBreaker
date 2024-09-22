@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] public LayerMask _collidableLayer;
+    [SerializeField] private LayerMask _collidableLayer;
+    [SerializeField] private GameEvent _hitEvent;
 
     private Transform _transform;
     private Vector3 _direction;
@@ -28,7 +29,7 @@ public class Projectile : MonoBehaviour
 
         if (TryProcessCollision(collision))
         {
-            TriggerCollision();
+            TriggerCollision(collision.gameObject);
         }
     }
     #endregion
@@ -116,9 +117,9 @@ public class Projectile : MonoBehaviour
 
     private bool IsHorizontalCollision(Vector3 delta) => Mathf.Abs(delta.x) >= Mathf.Abs(delta.y);
 
-    private void TriggerCollision()
+    private void TriggerCollision(GameObject destructible)
     {
-        Debug.Log("Collided!");
+        _hitEvent.Raise(this, destructible);
     }
 
     #endregion

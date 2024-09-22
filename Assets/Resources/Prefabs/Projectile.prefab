@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 8425522972496434839}
   - component: {fileID: 7165032054379745056}
   - component: {fileID: 1919059465433795591}
+  - component: {fileID: 788259071275246440}
   m_Layer: 6
   m_Name: Projectile
   m_TagString: Untagged
@@ -165,6 +166,7 @@ MonoBehaviour:
   _collidableLayer:
     serializedVersion: 2
     m_Bits: 128
+  _hitEvent: {fileID: 11400000, guid: 5a90311951b12e64891b215c4a23cae0, type: 2}
 --- !u!58 &1919059465433795591
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -200,3 +202,24 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.2
+--- !u!95 &788259071275246440
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9100209691573041983}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c0a9d4cf6b759624fb6e34712c63fcca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

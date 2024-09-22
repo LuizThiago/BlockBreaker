@@ -4,8 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [SerializeField] CannonController _canonController;
-    [SerializeField] ProjectileController _projectileController;
+    [SerializeField] private CannonController _canonController;
+    [SerializeField] private ProjectileController _projectileController;
 
     #region Properties
 
