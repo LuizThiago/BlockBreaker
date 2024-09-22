@@ -8,6 +8,9 @@ public class CannonController : MonoBehaviour
     [SerializeField] private InputActionReference _aimInputAction;
     [SerializeField] private InputActionReference _shootInputAction;
     [SerializeField] private CannonSettings _canonSettings;
+    [Header("Events")]
+    [SerializeField] private GameEvent _gameStartEvent;
+    [SerializeField] private GameEvent _gameEndEvent;
 
     private Vector2 _mousePosition;
 
@@ -15,22 +18,36 @@ public class CannonController : MonoBehaviour
 
     private void OnEnable()
     {
-        EnableInputs();
+        _gameStartEvent.RegisterResponse(OnGameStartEvent);
+        _gameEndEvent.RegisterResponse(OnGameEndEvent);
     }
 
     private void Update()
     {
+        if (!GameManager.IsRunning) { return; }
+
         RotateCannonTowardsMouse();
     }
 
     private void OnDisable()
     {
-        DisableInputs();
+        _gameStartEvent.UnRegisterResponse(OnGameStartEvent);
+        _gameEndEvent.UnRegisterResponse(OnGameEndEvent);
     }
 
     #endregion
 
     #region Private
+
+    private void OnGameStartEvent(Component sender, object arg)
+    {
+        EnableInputs();
+    }
+
+    private void OnGameEndEvent(Component sender, object arg)
+    {
+        DisableInputs();
+    }
 
     private void OnAimInputPerformed(InputAction.CallbackContext context)
     {

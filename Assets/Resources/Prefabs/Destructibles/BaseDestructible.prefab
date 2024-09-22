@@ -50,6 +50,7 @@ MonoBehaviour:
   _definition: {fileID: 0}
   _spriteRenderer: {fileID: 0}
   _hitEvent: {fileID: 11400000, guid: 5a90311951b12e64891b215c4a23cae0, type: 2}
+  _destructableDestroyedEvent: {fileID: 11400000, guid: 82ad9c647591370409ace261981420f1, type: 2}
 --- !u!61 &8489936189815160896
 BoxCollider2D:
   m_ObjectHideFlags: 0

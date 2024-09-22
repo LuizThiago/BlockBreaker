@@ -5,6 +5,9 @@ public class ProjectileController : MonoBehaviour
 {
     [SerializeField] private ProjectileSettings _projectileSettings;
     [SerializeField] private Transform _projectilesContainer;
+    [Header("Events")]
+    [SerializeField] private GameEvent _allDestructibleDestroyedEvent;
+
     private readonly List<Projectile> _projectiles = new();
     private readonly List<Projectile> _toDestroy = new();
 
@@ -18,8 +21,15 @@ public class ProjectileController : MonoBehaviour
 
     #region Monobehaviour
 
+    private void OnEnable()
+    {
+        _allDestructibleDestroyedEvent.RegisterResponse(OnAllDestructibleDestroyed);
+    }
+
     private void Update()
     {
+        if (!GameManager.IsRunning) { return; }
+
         var deltaTime = Time.deltaTime;
 
         foreach (var projectile in _projectiles)
@@ -45,16 +55,50 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        _allDestructibleDestroyedEvent.UnRegisterResponse(OnAllDestructibleDestroyed);
+    }
+
     #endregion
 
     #region Public
 
     public void SpawnProjectile(Vector3 direction, Vector3 spawnPoint)
     {
+        if (!GameManager.IsRunning) { return; }
+
         var projectile = Instantiate(ProjectilePrefab, spawnPoint, Quaternion.identity, _projectilesContainer);
         projectile.Init(direction, ProjectileSpeed, ProjectileLifeTime);
 
         _projectiles.Add(projectile);
+    }
+
+    #endregion
+
+    #region Private
+
+    private void OnAllDestructibleDestroyed(Component sender, object _)
+    {
+        DestroyAllProjectiles();
+    }
+
+    private void DestroyAllProjectiles()
+    {
+        foreach (var projectileToDestroy in _toDestroy)
+        {
+            _projectiles.Remove(projectileToDestroy);
+            Destroy(projectileToDestroy.gameObject);
+        }
+
+        _toDestroy.Clear();
+
+        for (int i = _projectiles.Count - 1; i >= 0; i--)
+        {
+            Destroy(_projectiles[i].gameObject);
+        }
+
+        _projectiles.Clear();
     }
 
     #endregion

@@ -49,6 +49,8 @@ MonoBehaviour:
   _aimInputAction: {fileID: 2300557360286035444, guid: a0cdd8cf0ed3d4a428cf9a2b8f54d098, type: 3}
   _shootInputAction: {fileID: 835980047419056340, guid: a0cdd8cf0ed3d4a428cf9a2b8f54d098, type: 3}
   _canonSettings: {fileID: 11400000, guid: efda00192b533684b80d79316ab7e516, type: 2}
+  _gameStartEvent: {fileID: 11400000, guid: 98870e00255aeef40a580a66136b7c19, type: 2}
+  _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
 --- !u!1 &6366957470960886718
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _projectileSettings: {fileID: 11400000, guid: a0033e832999a10438ef175d9e6767b8, type: 2}
   _projectilesContainer: {fileID: 0}
+  _allDestructibleDestroyedEvent: {fileID: 11400000, guid: 25c0f543b59cfef40ab8539f36b88e76, type: 2}
 --- !u!1 &8188613632951605716
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +130,7 @@ Transform:
   m_Children:
   - {fileID: 2425245596009750994}
   - {fileID: 6766794496009349688}
+  - {fileID: 5456304997448319528}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8692314576523785780
@@ -143,3 +147,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canonController: {fileID: 3891003735609174297}
   _projectileController: {fileID: 9023089614968095096}
+  _gameStartEvent: {fileID: 11400000, guid: 98870e00255aeef40a580a66136b7c19, type: 2}
+  _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
+  _allDestructibleDestroyedEvent: {fileID: 11400000, guid: 25c0f543b59cfef40ab8539f36b88e76, type: 2}
+--- !u!1 &9107232084787584881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5456304997448319528}
+  - component: {fileID: 7062814494319727930}
+  m_Layer: 0
+  m_Name: Stage Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5456304997448319528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107232084787584881}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1996564076767540774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7062814494319727930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107232084787584881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a4519de7ab4eb74db7f05ac79c88fd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stages:
+    <Stages>k__BackingField:
+    - {fileID: 11400000, guid: 8d55e905a3df6a34183ed4739536527c, type: 2}
+    - {fileID: 11400000, guid: 5b6f1b0c4b9239c4daa407091c4ecdb9, type: 2}
+    - {fileID: 11400000, guid: 5e312f8366c6aad42bfc854268131f12, type: 2}
+  _destructiblePrefab: {fileID: 7364962793700548473, guid: 647518fc08c106b4cae1dc6f4e63972d, type: 3}
+  _destructiblesContainer: {fileID: 0}
+  _destructibleDestroyedEvent: {fileID: 11400000, guid: 82ad9c647591370409ace261981420f1, type: 2}
+  _allDestructibleDestroyedEvent: {fileID: 11400000, guid: 25c0f543b59cfef40ab8539f36b88e76, type: 2}

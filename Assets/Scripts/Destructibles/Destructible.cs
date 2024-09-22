@@ -1,10 +1,12 @@
 using UnityEngine;
 
-public class Destructible : MonoBehaviour, IGameEventListener
+public class Destructible : MonoBehaviour
 {
     [SerializeField] private DestructibleDefiniton _definition;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [Header("Events")]
     [SerializeField] private GameEvent _hitEvent;
+    [SerializeField] private GameEvent _destructableDestroyedEvent;
 
     private int _hitPoints;
 
@@ -12,7 +14,7 @@ public class Destructible : MonoBehaviour, IGameEventListener
 
     private void OnEnable()
     {
-        _hitEvent.RegisterListener(this);
+        _hitEvent.RegisterResponse(OnHit);
     }
 
     private void Awake()
@@ -23,19 +25,7 @@ public class Destructible : MonoBehaviour, IGameEventListener
 
     private void OnDisable()
     {
-        _hitEvent.UnRegisterListener(this);
-    }
-
-    #endregion
-
-    #region Protected
-
-    void IGameEventListener.OnEventRaised(Component sender, object arg)
-    {
-        if (arg is GameObject objectHit && objectHit == gameObject)
-        {
-            TakeDamage();
-        }
+        _hitEvent.UnRegisterResponse(OnHit);
     }
 
     #endregion
@@ -55,6 +45,13 @@ public class Destructible : MonoBehaviour, IGameEventListener
             _spriteRenderer.sprite = sprite;
         }
     }
+    private void OnHit(Component sender, object arg)
+    {
+        if (arg is GameObject objectHit && objectHit == gameObject)
+        {
+            TakeDamage();
+        }
+    }
 
     private void TakeDamage(int damage = 1)
     {
@@ -70,6 +67,7 @@ public class Destructible : MonoBehaviour, IGameEventListener
 
     private void Despawn()
     {
+        _destructableDestroyedEvent.Raise(this, null);
         Destroy(gameObject);
     }
 
