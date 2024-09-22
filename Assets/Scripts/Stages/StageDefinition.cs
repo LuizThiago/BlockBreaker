@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,13 +7,13 @@ public class StageDefinition : ScriptableObject
     public int GridWidth = 10;
     public int GridHeight = 5;
     public float Spacing = 1.5f;
+    public DestructibleDefiniton DestructibleDefinition;
     public StageMatrix Grid = new StageMatrix();
 
     #region Monobehaviour
 
     private void OnValidate()
     {
-        // Garante que o grid seja inicializado no momento correto no editor
         if (Grid.Column.Count != GridWidth || Grid.Column[0].Row.Count != GridHeight)
         {
             Init();
@@ -31,12 +30,13 @@ public class StageDefinition : ScriptableObject
 
         for (int x = 0; x < GridWidth; x++)
         {
-            StageArray newArray = new StageArray();
+            StageArray newArray = new();
 
             for (int y = 0; y < GridHeight; y++)
             {
-                newArray.Row.Add(false); // Inicializa todas as células como "false"
+                newArray.Row.Add(0); 
             }
+
             Grid.Column.Add(newArray);
         }
     }
@@ -47,21 +47,23 @@ public class StageDefinition : ScriptableObject
 [System.Serializable]
 public class StageMatrix
 {
-    public List<StageArray> Column = new List<StageArray>();
-    public bool this[int x, int y]
+    public List<StageArray> Column = new();
+
+    public int this[int x, int y]
     {
-        get => Column[x][y];  // Getter: Acessa o valor no grid
-        set => Column[x][y] = value;  // Setter: Atribui o valor no grid
+        get => Column[x][y]; 
+        set => Column[x][y] = value;
     }
 }
 
 [System.Serializable]
 public class StageArray
 {
-    public List<bool> Row = new List<bool>();
-    public bool this[int index]
+    public List<int> Row = new();
+
+    public int this[int index]
     {
-        get => Row[index];  // Getter: Acessa o valor na linha
-        set => Row[index] = value;  // Setter: Atribui o valor na linha
+        get => Row[index];
+        set => Row[index] = value;
     }
 }

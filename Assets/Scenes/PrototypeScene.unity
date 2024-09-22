@@ -1816,6 +1816,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1775204035}
     - target: {fileID: 7062814494319727930, guid: b8e13ab0ff1caad419fe39f46b61ff07, type: 3}
+      propertyPath: _destructiblePrefab
+      value: 
+      objectReference: {fileID: 7364962793700548473, guid: 7cff27651a1f50f42936f5484d71317d, type: 3}
+    - target: {fileID: 7062814494319727930, guid: b8e13ab0ff1caad419fe39f46b61ff07, type: 3}
       propertyPath: _destructiblesContainer
       value: 
       objectReference: {fileID: 188303004}

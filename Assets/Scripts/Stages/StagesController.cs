@@ -44,12 +44,13 @@ public class StagesController : MonoBehaviour
         {
             for (int y = 0; y < currentStage.GridHeight; y++)
             {
-                if (currentStage.Grid[x, y])
+                if (currentStage.Grid[x, y] > 0)
                 {
                     Vector2 spawnPosition = GetSpawnPosition(currentStage, startPosition, x, y);
 
                     var destructible = Instantiate(_destructiblePrefab, spawnPosition, Quaternion.identity, _destructiblesContainer.transform);
                     _destructibles.Add(destructible);
+                    destructible.Init(currentStage.Grid[x, y], currentStage.DestructibleDefinition);
                 }
             }
         }

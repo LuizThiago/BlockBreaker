@@ -3,8 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Definitions/DestructibleDefiniton", fileName = "new DestructibleDefiniton")]
 public class DestructibleDefiniton : ScriptableObject
 {
-    [field: SerializeField] public int HitPoints { get; private set; } = 1;
     [SerializeField] private Sprite[] _sprites;
+
+    public int MaxHitPoints => _sprites.Length;
 
     public bool TryGetSpriteForHitPoint(int hitPoint, out Sprite sprite)
     {

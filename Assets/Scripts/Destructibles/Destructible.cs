@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Destructible : MonoBehaviour
 {
-    [SerializeField] private DestructibleDefiniton _definition;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [Header("Events")]
     [SerializeField] private GameEvent _hitEvent;
     [SerializeField] private GameEvent _destructableDestroyedEvent;
 
     private int _hitPoints;
+    private DestructibleDefiniton _definition;
 
     #region Monobehaviours
 
@@ -17,15 +17,20 @@ public class Destructible : MonoBehaviour
         _hitEvent.RegisterResponse(OnHit);
     }
 
-    private void Awake()
-    {
-        _hitPoints = _definition.HitPoints;
-        UpdateSprite();
-    }
-
     private void OnDisable()
     {
         _hitEvent.UnRegisterResponse(OnHit);
+    }
+
+    #endregion
+
+    #region Public
+
+    public void Init(int hitPoint, DestructibleDefiniton definition)
+    {
+        _definition = definition;
+        _hitPoints = hitPoint;
+        UpdateSprite();
     }
 
     #endregion

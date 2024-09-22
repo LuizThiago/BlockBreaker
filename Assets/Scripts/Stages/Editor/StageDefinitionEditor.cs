@@ -25,7 +25,14 @@ public class StageDefinitionEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("GridWidth"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("GridHeight"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Spacing"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("DestructibleDefinition"));
         EditorGUILayout.Space();
+
+        if (serializedObject.FindProperty("DestructibleDefinition").objectReferenceValue == null)
+        {
+            EditorGUILayout.HelpBox("Please attach a DestructibleDefiniton", MessageType.Warning);
+            return;
+        }
         
         if (GUILayout.Button("Generate Grid"))
         {
@@ -40,10 +47,10 @@ public class StageDefinitionEditor : Editor
             EditorGUILayout.BeginHorizontal();
             for (int x = 0; x < _pattern.GridWidth; x++)
             {
-                bool newValue = GUILayout.Toggle(_pattern.Grid[x, y], GUIContent.none, GUILayout.Width(25), GUILayout.Height(25));
-                if (newValue != _pattern.Grid[x, y])
+                int currentHitPoints = _pattern.Grid[x, y];
+                if (GUILayout.Button(currentHitPoints.ToString(), GUILayout.Width(25), GUILayout.Height(25)))
                 {
-                    _pattern.Grid[x, y] = newValue;
+                    _pattern.Grid[x, y] = (currentHitPoints + 1) % (_pattern.DestructibleDefinition.MaxHitPoints + 1);
                     EditorUtility.SetDirty(_pattern);
                 }
             }
