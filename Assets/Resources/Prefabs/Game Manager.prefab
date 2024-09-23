@@ -121,11 +121,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4bbfc5633ae2af4b99a42bdcef93780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxMessages: 10
+  _settings: {fileID: 11400000, guid: bec04b672418a1b49bdb3551d2753e69, type: 2}
   _logText: {fileID: 0}
   _hitEvent: {fileID: 11400000, guid: 5a90311951b12e64891b215c4a23cae0, type: 2}
   _shotEvent: {fileID: 11400000, guid: 3665f646fc9a71f45b00c55054ada3a4, type: 2}
   _destructibleDestroyedEvent: {fileID: 11400000, guid: 82ad9c647591370409ace261981420f1, type: 2}
+  _playerStartedEvent: {fileID: 11400000, guid: 9b23d1e9075a962478888d16c05e5b62, type: 2}
 --- !u!1 &6366957470960886718
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _projectileSettings: {fileID: 11400000, guid: a0033e832999a10438ef175d9e6767b8, type: 2}
   _projectilesContainer: {fileID: 0}
+  _projectilePool: {fileID: 0}
   _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}
   _shotEvent: {fileID: 11400000, guid: 3665f646fc9a71f45b00c55054ada3a4, type: 2}
 --- !u!1 &8188613632951605716
@@ -279,7 +281,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8d55e905a3df6a34183ed4739536527c, type: 2}
     - {fileID: 11400000, guid: 5b6f1b0c4b9239c4daa407091c4ecdb9, type: 2}
     - {fileID: 11400000, guid: 5e312f8366c6aad42bfc854268131f12, type: 2}
-  _destructiblePrefab: {fileID: 7364962793700548473, guid: 647518fc08c106b4cae1dc6f4e63972d, type: 3}
+  _destructiblePrefab: {fileID: 7364962793700548473, guid: 7cff27651a1f50f42936f5484d71317d, type: 3}
   _destructiblesContainer: {fileID: 0}
   _destructibleDestroyedEvent: {fileID: 11400000, guid: 82ad9c647591370409ace261981420f1, type: 2}
   _gameEndEvent: {fileID: 11400000, guid: 74764c6a25d20ee4895c612d9ea4c82c, type: 2}

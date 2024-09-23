@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : PoolableItem
 {
     [SerializeField] private LayerMask _collidableLayer;
     [SerializeField] private GameEvent _hitEvent;

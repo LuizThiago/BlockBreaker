@@ -5,6 +5,7 @@ public class ProjectileController : MonoBehaviour
 {
     [SerializeField] private ProjectileSettings _projectileSettings;
     [SerializeField] private Transform _projectilesContainer;
+    [SerializeField] private ProjectilesPool _projectilePool;
     [Header("Events")]
     [SerializeField] private GameEvent _gameEndEvent;
     [SerializeField] private GameEvent _shotEvent;
@@ -14,7 +15,6 @@ public class ProjectileController : MonoBehaviour
 
     #region Properties
 
-    private Projectile ProjectilePrefab => _projectileSettings.ProjectilePrefab;
     private float ProjectileLifeTime => _projectileSettings.LifeTime;
     private float ProjectileSpeed => _projectileSettings.Speed;
 
@@ -49,7 +49,7 @@ public class ProjectileController : MonoBehaviour
             foreach (var projectileToDestroy in _toDestroy)
             {
                 _projectiles.Remove(projectileToDestroy);
-                Destroy(projectileToDestroy.gameObject);
+                projectileToDestroy.ReturnToPool();
             }
 
             _toDestroy.Clear();
@@ -69,7 +69,9 @@ public class ProjectileController : MonoBehaviour
     {
         if (!GameManager.IsRunning) { return; }
 
-        var projectile = Instantiate(ProjectilePrefab, spawnPoint, Quaternion.identity, _projectilesContainer);
+        var projectile = _projectilePool.GetItem(spawnPoint, Quaternion.identity);
+        projectile.transform.SetParent(_projectilesContainer, false);
+        projectile.transform.position = spawnPoint;
         projectile.Init(direction, ProjectileSpeed, ProjectileLifeTime);
 
         _projectiles.Add(projectile);
@@ -91,14 +93,14 @@ public class ProjectileController : MonoBehaviour
         foreach (var projectileToDestroy in _toDestroy)
         {
             _projectiles.Remove(projectileToDestroy);
-            Destroy(projectileToDestroy.gameObject);
+            projectileToDestroy.ReturnToPool();
         }
 
         _toDestroy.Clear();
 
         for (int i = _projectiles.Count - 1; i >= 0; i--)
         {
-            Destroy(_projectiles[i].gameObject);
+            _projectiles[i].ReturnToPool();
         }
 
         _projectiles.Clear();
