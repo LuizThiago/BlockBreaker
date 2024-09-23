@@ -50,6 +50,7 @@ public class StagesController : MonoBehaviour
 
                     var destructible = Instantiate(_destructiblePrefab, spawnPosition, Quaternion.identity, _destructiblesContainer.transform);
                     _destructibles.Add(destructible);
+                    destructible.gameObject.name = $"{_destructiblePrefab.name} {_destructibles.Count}";
                     destructible.Init(currentStage.Grid[x, y], currentStage.DestructibleDefinition);
                 }
             }

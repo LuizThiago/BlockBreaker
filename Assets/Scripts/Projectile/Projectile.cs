@@ -30,7 +30,7 @@ public class Projectile : PoolableItem
         var isWall = ContainsLayerMask(_wallLayer, collision.gameObject);
         if (!isCollidable && !isWall) { return; }
 
-        ProcessCollision(collision, isWall);
+        ProcessCollision(collision);
     }
     #endregion
 
@@ -59,27 +59,15 @@ public class Projectile : PoolableItem
     #region Private
     private bool ContainsLayerMask(LayerMask layerMask, GameObject obj) => (layerMask.value & (1 << obj.layer)) != 0;
 
-    private void ProcessCollision(Collision2D collision, bool isWall)
+    private void ProcessCollision(Collision2D collision)
     {
-        InvertDirection(collision, isWall);
+        InvertDirection(collision);
         _hitEvent.Raise(this, collision.gameObject);
     }
 
-    private void InvertDirection(Collision2D collision, bool isWall)
+    private void InvertDirection(Collision2D collision)
     {
-        Vector3 delta = transform.position - collision.transform.position;
-        bool isHorizontalCollision = Mathf.Abs(delta.x) > Mathf.Abs(delta.y);
-
-        if (isWall)
-        {
-            _direction.y = isHorizontalCollision ? -_direction.y : _direction.y;
-            _direction.x = !isHorizontalCollision ? -_direction.x : _direction.x;
-        }
-        else
-        {
-            _direction.x = isHorizontalCollision ? -_direction.x : _direction.x;
-            _direction.y = !isHorizontalCollision ? -_direction.y : _direction.y;
-        }
+        _direction = Vector3.Reflect(_direction, collision.contacts[0].normal);
     }
 
     #endregion

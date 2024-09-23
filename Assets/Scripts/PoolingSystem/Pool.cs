@@ -14,7 +14,7 @@ public class Pool<T> : MonoBehaviour, IPool where T : PoolableItem
     {
         for (int i = 0; i < _initialSize; i++)
         {
-            T newObj = CreateNewItem();
+            T newObj = CreateNewItem(_availableObjects.Count);
             newObj.gameObject.SetActive(false);
             _availableObjects.Enqueue(newObj);
         }
@@ -36,7 +36,7 @@ public class Pool<T> : MonoBehaviour, IPool where T : PoolableItem
         }
         else
         {
-            poolableItem = CreateNewItem();
+            poolableItem = CreateNewItem(_availableObjects.Count);
         }
 
         poolableItem.gameObject.SetActive(true);
@@ -54,9 +54,10 @@ public class Pool<T> : MonoBehaviour, IPool where T : PoolableItem
 
     #region Private
 
-    private T CreateNewItem()
+    private T CreateNewItem(int index)
     {
         T newObj = Instantiate(_prefab, transform);
+        newObj.gameObject.name = $"{_prefab.name} {index}"; 
         newObj.SetPool(this);
         return newObj;
     }
