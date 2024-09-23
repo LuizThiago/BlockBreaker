@@ -45,3 +45,4 @@ Once I realized the mistake, I tried using a linked list, as I was sure Unity se
 
 Currently, the stage system only supports a single block prefab. An improvement here would be to allow the use of multiple prefabs. This would require a small refactor of the stage and editor architecture, but it’s entirely feasible.
 Although it is not within the project scope, various improvements could be made to the game design, such as power-ups, moving blocks, etc.
+Additionally, a random level creator would be interesting and relatively simple to implement.
