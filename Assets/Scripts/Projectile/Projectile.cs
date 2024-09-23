@@ -30,10 +30,7 @@ public class Projectile : PoolableItem
         var isWall = ContainsLayerMask(_wallLayer, collision.gameObject);
         if (!isCollidable && !isWall) { return; }
 
-        if (TryProcessCollision(collision, isWall))
-        {
-            TriggerCollision(collision.gameObject);
-        }
+        ProcessCollision(collision, isWall);
     }
     #endregion
 
@@ -60,51 +57,29 @@ public class Projectile : PoolableItem
     #endregion
 
     #region Private
-
     private bool ContainsLayerMask(LayerMask layerMask, GameObject obj) => (layerMask.value & (1 << obj.layer)) != 0;
 
-    private bool TryProcessCollision(Collision2D collision, bool isWall)
+    private void ProcessCollision(Collision2D collision, bool isWall)
     {
-        Vector3 delta = CalculateCollisionDelta(collision.transform);
-        return TryInvertDirection(delta, isWall);
+        InvertDirection(collision, isWall);
+        _hitEvent.Raise(this, collision.gameObject);
     }
 
-    private Vector3 CalculateCollisionDelta(Transform colliderTransform)
+    private void InvertDirection(Collision2D collision, bool isWall)
     {
-        return (transform.position - colliderTransform.position);
-    }
+        Vector3 delta = transform.position - collision.transform.position;
+        bool isHorizontalCollision = Mathf.Abs(delta.x) > Mathf.Abs(delta.y);
 
-    private bool TryInvertDirection(Vector3 delta, bool isWall)
-    {
-        if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+        if (isWall)
         {
-            if (isWall)
-            {
-                _direction.y = -_direction.y;
-            }
-            else
-            {
-                _direction.x = -_direction.x;
-            }
-            return true;
+            _direction.y = isHorizontalCollision ? -_direction.y : _direction.y;
+            _direction.x = !isHorizontalCollision ? -_direction.x : _direction.x;
         }
         else
         {
-            if (isWall)
-            {
-                _direction.x = -_direction.x;
-            }
-            else
-            {
-                _direction.y = -_direction.y;
-            }
-            return true;
+            _direction.x = isHorizontalCollision ? -_direction.x : _direction.x;
+            _direction.y = !isHorizontalCollision ? -_direction.y : _direction.y;
         }
-    }
-
-    private void TriggerCollision(GameObject destructible)
-    {
-        _hitEvent.Raise(this, destructible);
     }
 
     #endregion
