@@ -166,6 +166,9 @@ MonoBehaviour:
   _collidableLayer:
     serializedVersion: 2
     m_Bits: 128
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _hitEvent: {fileID: 11400000, guid: 5a90311951b12e64891b215c4a23cae0, type: 2}
 --- !u!58 &1919059465433795591
 CircleCollider2D:

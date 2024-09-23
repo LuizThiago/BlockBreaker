@@ -3,6 +3,7 @@ using UnityEngine;
 public class Projectile : PoolableItem
 {
     [SerializeField] private LayerMask _collidableLayer;
+    [SerializeField] private LayerMask _wallLayer;
     [SerializeField] private GameEvent _hitEvent;
 
     private Transform _transform;
@@ -25,9 +26,11 @@ public class Projectile : PoolableItem
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!IsInLayerMask(collision.gameObject)) { return; }
+        var isCollidable = ContainsLayerMask(_collidableLayer, collision.gameObject);
+        var isWall = ContainsLayerMask(_wallLayer, collision.gameObject);
+        if (!isCollidable && !isWall) { return; }
 
-        if (TryProcessCollision(collision))
+        if (TryProcessCollision(collision, isWall))
         {
             TriggerCollision(collision.gameObject);
         }
@@ -58,64 +61,46 @@ public class Projectile : PoolableItem
 
     #region Private
 
-    private bool IsInLayerMask(GameObject obj) => (_collidableLayer.value & (1 << obj.layer)) != 0;
+    private bool ContainsLayerMask(LayerMask layerMask, GameObject obj) => (layerMask.value & (1 << obj.layer)) != 0;
 
-    private bool TryProcessCollision(Collision2D collision)
+    private bool TryProcessCollision(Collision2D collision, bool isWall)
     {
         Vector3 delta = CalculateCollisionDelta(collision.transform);
-        return TryInvertDirection(delta);
+        return TryInvertDirection(delta, isWall);
     }
 
     private Vector3 CalculateCollisionDelta(Transform colliderTransform)
     {
-        Vector3 delta = (transform.position - colliderTransform.position);
-        Vector3 scaleFactor = GetScaleFactor(colliderTransform);
-        delta.Scale(scaleFactor);
-
-        return delta;
+        return (transform.position - colliderTransform.position);
     }
 
-    private Vector3 GetScaleFactor(Transform colliderTransform)
+    private bool TryInvertDirection(Vector3 delta, bool isWall)
     {
-        Vector3 colliderScale = colliderTransform.localScale;
-
-        if (colliderScale.x > colliderScale.y)
+        if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
         {
-            return new Vector3(0.5f, 1f, 1f); //Collider is wider than it is tall
-        }
-        else if (colliderScale.y > colliderScale.x)
-        {
-            return new Vector3(1f, 0.5f, 1f); //Collider is taller than it is wide
-        }
-        else
-        {
-            return new Vector3(1f, 1f, 1f); //Collider is square
-        }
-    }
-
-    private bool TryInvertDirection(Vector3 delta)
-    {
-        if (IsHorizontalCollision(delta))
-        {
-            if (Mathf.Sign(-_direction.x) == Mathf.Sign(delta.x))
-            {
-                _direction.x = -_direction.x;
-                return true;
-            }
-        }
-        else
-        {
-            if (Mathf.Sign(-_direction.y) == Mathf.Sign(delta.y))
+            if (isWall)
             {
                 _direction.y = -_direction.y;
-                return true;
             }
+            else
+            {
+                _direction.x = -_direction.x;
+            }
+            return true;
         }
-
-        return false;
+        else
+        {
+            if (isWall)
+            {
+                _direction.x = -_direction.x;
+            }
+            else
+            {
+                _direction.y = -_direction.y;
+            }
+            return true;
+        }
     }
-
-    private bool IsHorizontalCollision(Vector3 delta) => Mathf.Abs(delta.x) >= Mathf.Abs(delta.y);
 
     private void TriggerCollision(GameObject destructible)
     {
