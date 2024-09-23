@@ -11,7 +11,7 @@ public class GameEvent : ScriptableObject
 
     public void Raise(Component sender, object arg)
     {
-        for (int i = _responses.Count - 1; i >= 0; i--)
+        for (int i = 0; i < _responses.Count; i++)
         {
             _responses[i]?.Invoke(sender, arg);
         }
