@@ -8,8 +8,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float _startTimeDelay = 3f;
     [Header("References")]
-    [SerializeField] private CannonController _canonController;
-    [SerializeField] private ProjectileController _projectileController;
     [SerializeField] private StagesController _stagesController;
     [SerializeField] private InputActionReference _startGameInputAction;
     [Header("Events")]
@@ -19,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     #region Properties
 
-    public static CannonController CanonController => Instance._canonController;
-    public static ProjectileController ProjectileController => Instance._projectileController;
     public static bool IsRunning { get; private set; }
 
     #endregion
@@ -104,9 +100,11 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(_startTimeDelay);
 
-        _stagesController.BuildStage();
-        IsRunning = true;
-        _gameStartEvent.Raise(this, null);
+        _stagesController.BuildStage(() =>
+        {
+            IsRunning = true;
+            _gameStartEvent.Raise(this, null);
+        });
     }
 
     #endregion

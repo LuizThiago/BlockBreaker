@@ -9,7 +9,7 @@ public class ConsoleLogController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _logText;
     [Header("Events")]
     [SerializeField] private GameEvent _hitEvent;
-    [SerializeField] private GameEvent _shotEvent;
+    [SerializeField] private GameEvent _projectileSpawnEvent;
     [SerializeField] private GameEvent _destructibleDestroyedEvent;
     [SerializeField] private GameEvent _playerStartedEvent;
 
@@ -20,7 +20,7 @@ public class ConsoleLogController : MonoBehaviour
     private void OnEnable()
     {
         _hitEvent.RegisterResponse(OnProjectileHitEvent);
-        _shotEvent.RegisterResponse(OnShotEvent);
+        _projectileSpawnEvent.RegisterResponse(OnProjectileSpawnEvent);
         _playerStartedEvent.RegisterResponse(OnPlayerStartedEvent);
         _destructibleDestroyedEvent.RegisterResponse(OnBlockDestroyedEvent);
     }
@@ -33,7 +33,7 @@ public class ConsoleLogController : MonoBehaviour
     private void OnDisable()
     {
         _hitEvent.UnRegisterResponse(OnProjectileHitEvent);
-        _shotEvent.UnRegisterResponse(OnShotEvent);
+        _projectileSpawnEvent.UnRegisterResponse(OnProjectileSpawnEvent);
         _playerStartedEvent.UnRegisterResponse(OnPlayerStartedEvent);
         _destructibleDestroyedEvent.UnRegisterResponse(OnBlockDestroyedEvent);
     }
@@ -102,7 +102,7 @@ public class ConsoleLogController : MonoBehaviour
         }
     }
 
-    private void OnShotEvent(Component sender, object arg)
+    private void OnProjectileSpawnEvent(Component sender, object arg)
     {
         if (arg is Projectile projectile)
         {
@@ -112,9 +112,12 @@ public class ConsoleLogController : MonoBehaviour
 
     private void OnProjectileHitEvent(Component sender, object arg)
     {
-        if (sender is Projectile projectile && arg is GameObject destructible)
+        if (sender is Projectile projectile && arg is Collider2D destructible)
         {
-            LogMessage($"<color={_settings.HitLogColor}>{projectile.name} has hit {destructible.name}</color>");
+            var isWall = Utils.ContainsLayerMask(_settings.WallLayer, destructible.gameObject);
+            if (isWall && !_settings.LogWallHits) { return; }
+
+            LogMessage($"<color={_settings.HitLogColor}>{projectile.name} has hit {destructible.gameObject.name}</color>");
         }
     }
 

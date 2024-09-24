@@ -4,6 +4,8 @@ using UnityEngine;
 public class ConsoleLogSettings : ScriptableObject
 {
     [field: SerializeField] public int MaxMessages { get; private set; }
+    [field: SerializeField] public LayerMask WallLayer { get; private set; }
+    [field: SerializeField] public bool LogWallHits { get; private set; } = false;
     [SerializeField] private Color _hitLogColor;
     [SerializeField] private Color _shotLogColor;
     [SerializeField] private Color _destroyLogColor;

@@ -3,26 +3,12 @@ using UnityEngine;
 public class Destructible : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [field: SerializeField] public Collider2D Collider { get; private set; }
     [Header("Events")]
-    [SerializeField] private GameEvent _hitEvent;
     [SerializeField] private GameEvent _destructableDestroyedEvent;
 
     private int _hitPoints;
     private DestructibleDefiniton _definition;
-
-    #region Monobehaviours
-
-    private void OnEnable()
-    {
-        _hitEvent.RegisterResponse(OnHit);
-    }
-
-    private void OnDisable()
-    {
-        _hitEvent.UnRegisterResponse(OnHit);
-    }
-
-    #endregion
 
     #region Public
 
@@ -30,6 +16,18 @@ public class Destructible : MonoBehaviour
     {
         _definition = definition;
         _hitPoints = hitPoint;
+        UpdateSprite();
+    }
+
+    public void TakeDamage(int damage = 1)
+    {
+        _hitPoints -= damage;
+        if (_hitPoints <= 0)
+        {
+            Despawn();
+            return;
+        }
+
         UpdateSprite();
     }
 
@@ -49,25 +47,6 @@ public class Destructible : MonoBehaviour
         {
             _spriteRenderer.sprite = sprite;
         }
-    }
-    private void OnHit(Component sender, object arg)
-    {
-        if (arg is GameObject objectHit && objectHit == gameObject)
-        {
-            TakeDamage();
-        }
-    }
-
-    private void TakeDamage(int damage = 1)
-    {
-        _hitPoints -= damage;
-        if (_hitPoints <= 0)
-        {
-            Despawn();
-            return;
-        }
-
-        UpdateSprite();
     }
 
     private void Despawn()

@@ -8,7 +8,8 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private ProjectilesPool _projectilePool;
     [Header("Events")]
     [SerializeField] private GameEvent _gameEndEvent;
-    [SerializeField] private GameEvent _shotEvent;
+    [SerializeField] private GameEvent _shotInputEvent;
+    [SerializeField] private GameEvent _projectileSpawnEvent;
 
     private readonly List<Projectile> _projectiles = new();
     private readonly List<Projectile> _toDestroy = new();
@@ -25,6 +26,7 @@ public class ProjectileController : MonoBehaviour
     private void OnEnable()
     {
         _gameEndEvent.RegisterResponse(OnGameEndEvent);
+        _shotInputEvent.RegisterResponse(OnShotInputEvent);
     }
 
     private void Update()
@@ -59,24 +61,7 @@ public class ProjectileController : MonoBehaviour
     private void OnDisable()
     {
         _gameEndEvent.UnRegisterResponse(OnGameEndEvent);
-    }
-
-    #endregion
-
-    #region Public
-
-    public void SpawnProjectile(Vector3 direction, Vector3 spawnPoint)
-    {
-        if (!GameManager.IsRunning) { return; }
-
-        var projectile = _projectilePool.GetItem(spawnPoint, Quaternion.identity);
-        projectile.transform.SetParent(_projectilesContainer, false);
-        projectile.transform.position = spawnPoint;
-        projectile.Init(direction, ProjectileSpeed, ProjectileLifeTime);
-
-        _projectiles.Add(projectile);
-
-        _shotEvent.Raise(this, projectile);
+        _shotInputEvent.UnRegisterResponse(OnShotInputEvent);
     }
 
     #endregion
@@ -86,6 +71,27 @@ public class ProjectileController : MonoBehaviour
     private void OnGameEndEvent(Component sender, object _)
     {
         DestroyAllProjectiles();
+    }
+
+    private void OnShotInputEvent(Component sender, object arg)
+    {
+        if (arg is Vector2[] dirAndSpawnPoint)
+        {
+            SpawnProjectile(dirAndSpawnPoint[0], dirAndSpawnPoint[1]);
+        }
+    }
+
+    private void SpawnProjectile(Vector3 direction, Vector3 spawnPoint)
+    {
+        if (!GameManager.IsRunning) { return; }
+
+        var projectile = _projectilePool.GetItem(spawnPoint, Quaternion.identity);
+        projectile.transform.SetParent(_projectilesContainer, false);
+        projectile.transform.position = spawnPoint;
+        projectile.Init(direction, ProjectileSpeed, ProjectileLifeTime);
+        _projectileSpawnEvent.Raise(this, projectile);
+
+        _projectiles.Add(projectile);
     }
 
     private void DestroyAllProjectiles()

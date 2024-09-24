@@ -11,6 +11,7 @@ public class CannonController : MonoBehaviour
     [Header("Events")]
     [SerializeField] private GameEvent _gameStartEvent;
     [SerializeField] private GameEvent _gameEndEvent;
+    [SerializeField] private GameEvent _shotInputEvent;
 
     private Vector2 _mousePosition;
 
@@ -60,9 +61,6 @@ public class CannonController : MonoBehaviour
         Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(_mousePosition);
         Vector3 direction = worldMousePosition - _canonTransform.position;
         float angle = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-
-        //We could clamp the angle for this angle range instead of returning,
-        //but this results in a strange visual result...
         if (angle < _canonSettings.MinAngle || angle > _canonSettings.MaxAngle) { return; } 
 
         //Apply the rotation to the canon
@@ -71,7 +69,7 @@ public class CannonController : MonoBehaviour
 
     private void OnShootInputPerformed(InputAction.CallbackContext context)
     {
-        GameManager.ProjectileController.SpawnProjectile(_canonTransform.up, _shootSpawnPoint.position);
+        _shotInputEvent.Raise(this, new Vector2[] { _canonTransform.up, _shootSpawnPoint.position });
     }
 
     private void EnableInputs()

@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: ConsoleLogSettings
   m_EditorClassIdentifier: 
   <MaxMessages>k__BackingField: 10
+  <WallLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 256
+  <LogWallHits>k__BackingField: 1
   _hitLogColor: {r: 0.514151, g: 1, b: 0.5582168, a: 1}
   _shotLogColor: {r: 0.740566, g: 1, b: 0.9926795, a: 1}
   _destroyLogColor: {r: 1, g: 0.3915094, b: 0.3915094, a: 1}

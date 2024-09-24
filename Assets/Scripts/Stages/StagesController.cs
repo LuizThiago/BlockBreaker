@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StagesController : MonoBehaviour
@@ -7,10 +10,11 @@ public class StagesController : MonoBehaviour
     [SerializeField] private Destructible _destructiblePrefab;
     [SerializeField] private Transform _destructiblesContainer;
     [Header("Events")]
+    [SerializeField] private GameEvent _hitEvent;
     [SerializeField] private GameEvent _destructibleDestroyedEvent;
     [SerializeField] private GameEvent _gameEndEvent;
 
-    private readonly List<Destructible> _destructibles = new();
+    private readonly Dictionary<Collider2D, Destructible> _destructibles = new();
 
     #region Properties
     public string CurrentStageName => _stages.CurrentStageName;
@@ -22,39 +26,24 @@ public class StagesController : MonoBehaviour
     private void OnEnable()
     {
         _destructibleDestroyedEvent.RegisterResponse(OnDestructibleDestroyed);
+        _hitEvent.RegisterResponse(OnHitEvent);
     }
 
     private void OnDisable()
     {
         _destructibleDestroyedEvent.UnRegisterResponse(OnDestructibleDestroyed);
+        _hitEvent.UnRegisterResponse(OnHitEvent);
     }
 
     #endregion
 
     #region Public
 
-    public void BuildStage()
+    public void BuildStage(Action onFinish)
     {
         ClearStage();
 
-        var currentStage = _stages.CurrentStage;
-        Vector2 startPosition = GetStartPosition(currentStage);
-
-        for (int x = 0; x < currentStage.GridWidth; x++)
-        {
-            for (int y = 0; y < currentStage.GridHeight; y++)
-            {
-                if (currentStage.Grid[x, y] > 0)
-                {
-                    Vector2 spawnPosition = GetSpawnPosition(currentStage, startPosition, x, y);
-
-                    var destructible = Instantiate(_destructiblePrefab, spawnPosition, Quaternion.identity, _destructiblesContainer.transform);
-                    _destructibles.Add(destructible);
-                    destructible.gameObject.name = $"{_destructiblePrefab.name} {_destructibles.Count}";
-                    destructible.Init(currentStage.Grid[x, y], currentStage.DestructibleDefinition);
-                }
-            }
-        }
+        StartCoroutine(ProcessStageBuild(onFinish));
     }
 
     #endregion
@@ -85,24 +74,29 @@ public class StagesController : MonoBehaviour
     {
         if (_destructibles.Count == 0) { return; }
 
-        for (int i = _destructibles.Count - 1; i >= 0; i--)
+        var inGameDestructibles = _destructibles.Values.ToList();
+
+        for (int i = inGameDestructibles.Count - 1; i >= 0; i--)
         {
-            Destroy(_destructibles[i].gameObject);
+            Destroy(inGameDestructibles[i].gameObject);
         }
 
         _destructibles.Clear();
     }
 
-    private void OnDestructibleDestroyed(Component sender, object _)
+    private void OnHitEvent(Component _, object arg)
     {
-        TryRemoveDestructible(sender);
+        if (arg is Collider2D collider && _destructibles.ContainsKey(collider))
+        {
+            _destructibles[collider].TakeDamage();
+        }
     }
 
-    private void TryRemoveDestructible(Component sender)
+    private void OnDestructibleDestroyed(Component sender, object _)
     {
-        if (sender is Destructible destructible && _destructibles.Contains(destructible))
+        if (sender is Destructible destructible && _destructibles.ContainsKey(destructible.Collider))
         {
-            _destructibles.Remove(destructible);
+            _destructibles.Remove(destructible.Collider);
             CheckIfStageFinished();
         }
     }
@@ -120,6 +114,42 @@ public class StagesController : MonoBehaviour
             _stages.ResetList();
             _gameEndEvent.Raise(this, null);
         }
+    }
+
+    private IEnumerator ProcessStageBuild(Action onFinish)
+    {
+        var currentStage = _stages.CurrentStage;
+        Vector2 startPosition = GetStartPosition(currentStage);
+
+        for (int x = 0; x < currentStage.GridWidth; x++)
+        {
+            for (int y = 0; y < currentStage.GridHeight; y++)
+            {
+                if (currentStage.Grid[x, y] > 0)
+                {
+                    Destructible destructible = SpawnDestructible(currentStage, startPosition, x, y);
+                    InitDestructible(currentStage, x, y, destructible);
+
+                    yield return new WaitForSeconds(0.05f);
+                }
+            }
+        }
+
+        onFinish?.Invoke();
+    }
+
+    private Destructible SpawnDestructible(StageDefinition currentStage, Vector2 startPosition, int x, int y)
+    {
+        Vector2 spawnPosition = GetSpawnPosition(currentStage, startPosition, x, y);
+        var destructible = Instantiate(_destructiblePrefab, spawnPosition, Quaternion.identity, _destructiblesContainer.transform);
+        return destructible;
+    }
+
+    private void InitDestructible(StageDefinition currentStage, int x, int y, Destructible destructible)
+    {
+        _destructibles.Add(destructible.Collider, destructible);
+        destructible.gameObject.name = $"{_destructiblePrefab.name} {_destructibles.Count}";
+        destructible.Init(currentStage.Grid[x, y], currentStage.DestructibleDefinition);
     }
 
     #endregion

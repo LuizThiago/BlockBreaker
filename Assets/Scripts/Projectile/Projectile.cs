@@ -26,11 +26,13 @@ public class Projectile : PoolableItem
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        var isCollidable = ContainsLayerMask(_collidableLayer, collision.gameObject);
-        var isWall = ContainsLayerMask(_wallLayer, collision.gameObject);
-        if (!isCollidable && !isWall) { return; }
-
-        ProcessCollision(collision);
+        var isCollidable = Utils.ContainsLayerMask(_collidableLayer, collision.gameObject);
+        var isWall = Utils.ContainsLayerMask(_wallLayer, collision.gameObject);
+        
+        if (isCollidable || isWall) 
+        {
+            ProcessCollision(collision);
+        }
     }
     #endregion
 
@@ -57,12 +59,11 @@ public class Projectile : PoolableItem
     #endregion
 
     #region Private
-    private bool ContainsLayerMask(LayerMask layerMask, GameObject obj) => (layerMask.value & (1 << obj.layer)) != 0;
 
     private void ProcessCollision(Collision2D collision)
     {
         InvertDirection(collision);
-        _hitEvent.Raise(this, collision.gameObject);
+        _hitEvent.Raise(this, collision.collider);
     }
 
     private void InvertDirection(Collision2D collision)
